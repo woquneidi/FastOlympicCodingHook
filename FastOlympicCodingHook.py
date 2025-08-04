@@ -25,7 +25,7 @@ def make_cpp_template(name, url, contestname, time_limit, memory_limit, group):
         "\n"
         "\n"
         "\n"
-        "\t\n"
+        "\n"
         "}}\n\n\n"
         "int main(){{\n"
         "\tstd::ios::sync_with_stdio(false), cin.tie(0), cout.tie(0);\n\n"
@@ -77,22 +77,22 @@ def MakeHandlerClass(foc_settings):
                         if " - " in group:
                             parts = group.split(" - ", 1)
                             group_dir = slugify(parts[0].strip())
-                            contestname_dir = slugify(parts[1].strip())
+                            contestname_dir = parts[1].strip()
                         else:
                             group_dir = slugify(group)
                             contestname_dir = "problem"
                     else:
                         group_dir = slugify(group)
-                        contestname_dir = slugify(contestname) if contestname else "problem"
+                        contestname_dir = contestname if contestname else "problem"
                     name_file = slugify(name)
                     
-                    special_base_dir = r"D:\wqnd\Desktop\C"
+                    special_base_dir = r"D:\wqnd\Desktop\ACM"
                     cpp_output_dir = os.path.join(special_base_dir, group_dir, contestname_dir)
                     filename_base = name_file
                     test_output_dir = os.path.join(special_base_dir, group_dir, contestname_dir)
                 else:
                     # 其他平台：从group中提取比赛信息
-                    special_base_dir = r"D:\wqnd\Desktop\C"
+                    special_base_dir = r"D:\wqnd\Desktop\ACM"
                     if " - " in group:
                         parts = group.split(" - ", 1)
                         platform_name = parts[0].strip()
@@ -101,7 +101,7 @@ def MakeHandlerClass(foc_settings):
                         platform_name = group
                         contest_name = "problem"
                     group_dir = slugify(platform_name)
-                    contestname_dir = slugify(contest_name)
+                    contestname_dir = contest_name
                     name_file = slugify(name)
                     cpp_output_dir = os.path.join(special_base_dir, group_dir, contestname_dir)
                     filename_base = name_file
@@ -123,11 +123,11 @@ def MakeHandlerClass(foc_settings):
                     with open(cpp_path, "w", encoding="utf8") as f:
                         f.write(template_content)
 
-                # 设置项目根目录为 D:\wqnd\Desktop\C
+                # 设置项目根目录为 D:\wqnd\Desktop\ACM
                 project_data = sublime.active_window().project_data() or {}
                 folders = project_data.get("folders", [])
-                if not any(f.get("path", "") == r"D:\\wqnd\\Desktop\\C" for f in folders):
-                    project_data["folders"] = [{"path": r"D:\\wqnd\\Desktop\\C"}]
+                if not any(f.get("path", "") == r"D:\\wqnd\\Desktop\\ACM" for f in folders):
+                    project_data["folders"] = [{"path": r"D:\\wqnd\\Desktop\\ACM"}]
                     sublime.active_window().set_project_data(project_data)
 
                 # 写入测试数据，文件名为 cpp文件名+__tests
