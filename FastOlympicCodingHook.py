@@ -69,7 +69,7 @@ def MakeHandlerClass(foc_settings):
                 time_limit = data.get("timeLimit", 1000)
                 memory_limit = data.get("memoryLimit", 256)
                 tests = data.get("tests", [])
-                print(title, name, url, group, contestname)
+                # print(title, name, url, group, contestname)
                 # 判断是否为指定平台（含AtCoder）
                 is_special_platform = group in ["Codeforces", "NowCoder", "Luogu"] or (group.startswith("AtCoder"))
                 
