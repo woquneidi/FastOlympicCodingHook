@@ -9,17 +9,19 @@ from os import path
 from datetime import datetime
 import traceback
 
+# WINDOWS_FORBIDDEN_CHARS = r'<>:"/\|?*'
 def slugify(name):
     if not isinstance(name, str):
         name = str(name) if name is not None else "untitled"
-    return ''.join(c if c.isalnum() or c in ['_', '-'] else '_' for c in name).strip('_')
+    return ''.join(c if c.isalnum() or c in ['_', '-', ' ', '(', ')', ''] else '_' for c in name).strip('_')
+     # cleaned_name = ''.join(c if c not in WINDOWS_FORBIDDEN_CHARS else '_' for c in name)
+      # return cleaned_name.strip('_')
 
 def make_cpp_template(name, url, contestname, time_limit, memory_limit, group):
     return (
         "#include<bits/stdc++.h>\n"
-        "using namespace std;\n"
-        "using i64 = long long;\n\n\n"
-        "void solve(){{\n"
+        "using namespace std;\n"        "using i64 = long long;\n\n\n"
+        "void solve() {{\n"
         "\t\n"
         "\n"
         "\n"
@@ -27,11 +29,11 @@ def make_cpp_template(name, url, contestname, time_limit, memory_limit, group):
         "\n"
         "\n"
         "}}\n\n\n"
-        "int main(){{\n"
+        "int main() {{\n"
         "\tstd::ios::sync_with_stdio(false), cin.tie(0), cout.tie(0);\n\n"
         "\tint T = 1;\n"
         "\t//cin >> T;\n"
-        "\twhile(T--) solve();\n\n"
+        "\twhile (T--) solve();\n\n"
         "\treturn 0;\n"
         "}}\n"
     ).format(name=name, url=url, contestname=contestname, time_limit=time_limit, memory_limit=memory_limit, group=group)
@@ -67,7 +69,7 @@ def MakeHandlerClass(foc_settings):
                 time_limit = data.get("timeLimit", 1000)
                 memory_limit = data.get("memoryLimit", 256)
                 tests = data.get("tests", [])
-
+                print(title, name, url, group, contestname)
                 # 判断是否为指定平台（含AtCoder）
                 is_special_platform = group in ["Codeforces", "NowCoder", "Luogu"] or (group.startswith("AtCoder"))
                 
@@ -77,15 +79,15 @@ def MakeHandlerClass(foc_settings):
                         if " - " in group:
                             parts = group.split(" - ", 1)
                             group_dir = slugify(parts[0].strip())
-                            contestname_dir = parts[1].strip()
+                            contestname_dir = slugify(parts[1].strip())
                         else:
                             group_dir = slugify(group)
                             contestname_dir = "problem"
-                    else:
+                    else:  #牛客 cf luogu 平台
                         group_dir = slugify(group)
-                        contestname_dir = contestname if contestname else "problem"
-                    name_file = slugify(name)
+                        contestname_dir = slugify(contestname) if contestname else "problem"
                     
+                    name_file = slugify(name)
                     special_base_dir = r"D:\wqnd\Desktop\ACM"
                     cpp_output_dir = os.path.join(special_base_dir, group_dir, contestname_dir)
                     filename_base = name_file
@@ -101,7 +103,7 @@ def MakeHandlerClass(foc_settings):
                         platform_name = group
                         contest_name = "problem"
                     group_dir = slugify(platform_name)
-                    contestname_dir = contest_name
+                    contestname_dir = slugify(contest_name)
                     name_file = slugify(name)
                     cpp_output_dir = os.path.join(special_base_dir, group_dir, contestname_dir)
                     filename_base = name_file
